@@ -1,5 +1,5 @@
 body {
-    background-color: #f1f1f1;
+    background-color: #efefef;
     border-top: 4px solid #f36;
 }
 
@@ -15,4 +15,48 @@ body {
 
 .aside * {
     font-size: 14px;
+}
+
+code, pre {
+    background: #fff;
+    color: #333;
+    font-size: 16px;
+    font-weight: normal;
+    border: 1px solid #ddd;
+    padding: 4px 6px;
+    border-radius: 3px;
+}
+
+pre, samp {
+    border-radius: 3px;
+    font-family: consolas, menlo, monaco, monospace;
+}
+
+pre {
+    padding: 20px;
+    padding-top: 0;
+    padding-bottom: 0;
+    width: 100%;
+    line-height: 1.2;
+    box-sizing: border-box;
+    display: block;
+    margin-bottom: 15px;
+    margin-top: -15px;
+    overflow-x: scroll;
+}
+
+pre > code {
+    border: none;
+    padding: 0;
+}
+
+
+pre + .caption {
+    margin-top: -15px;
+}
+
+.caption {
+    padding: 4px;
+    font-size: 13px;
+    color: #888;
 }
