@@ -21,11 +21,11 @@
 <div class="row">
     <div class="large-8 medium-8 columns">
         <div class="post">
-            <h3>Setting up a Django app from Mac OSX to Vagrant with Ansible to AWS</h3>
+            <h3>Django app deployment: Mac OSX to Vagrant (with Ansible) to AWS</h3>
             <h5 class="subheader">1 March 2014</h5>
 
             <p>Having used some less than desirable VPS solutions in the past I've decided to give some professional solutions a go.</p>
-            <p>I've got a simple Django 1.6 Application running on my Mac (using virtualenv) and I'd like to have it running under <a href="http://www.vagrantup.com/">Vagrant</a>.</p>
+            <p>I've got a simple Django 1.6 application running on my Mac (using virtualenv) and I'd like to have it running under <a href="http://www.vagrantup.com/">Vagrant</a>.</p>
             <p>Once that's done the next step is to have it running on an AWS EC2 instance - provisioned with Vagrant - and achieve development/production environment consistency...so, here we go!</p>
 
             <h4>Decoupling from the environment</h4>
@@ -50,23 +50,22 @@ settings/
 
             <h4>Vagrant</h4>
 
-            <p>Vagrant allows us to setup and manage virtual machines, this means having an enviroment which is predictable and shareable amongst your development team.</p>
+            <p>Vagrant allows us to setup and manage virtual machines, this means having an environment which is predictable and shareable amongst your development team.</p>
 
             <p>However, even if you're working on a project as a single developer as I am, its still sensible to work in an environment that can be independently managed.</p>
 
-            <p>So to get our Django application into Vagrant the first steps are simple. I've already downloaded and installed Vagrant so from the project root I'll need to setup a Vagrantfile.</p>
+            <p>So to get our Django application into Vagrant the first steps are simple. I've already downloaded and installed Vagrant, so from the project root I'll need to setup a Vagrantfile.</p>
 
             <p>This is as easy as running the <code>vagrant init</code> command with a box specified. In this case I'm using Ubuntu 12.04 as a base.</p>
 
 
 <pre>
 <code>
-$ workon [project]
 $ vagrant init precise32 http://files.vagrantup.com/precise32.box
 $ vagrant up
 </code>
 </pre>
-<p class="caption"><code>workon</code> is a <a href="http://virtualenvwrapper.readthedocs.org/en/latest/">virtualenvwrapper</a> command for getting to project root and activating.</p>
+<p class="caption">Creates a Vagrantfile and fires up the Ubuntu based VM</p>
 
             <p>That should setup the VM, but before we go any further we'll need to edit the Vagrantfile and assign an IP address to it.</p>
 
@@ -77,6 +76,7 @@ $ vagrant up
 config.vm.network :private_network, IP: "192.168.33.10"
 </code>
 </pre>
+            <p>Then run <code>$ vagrant reload</code> which will restart the VM with the updated Vagrantfile file.</p>
             <p>That's pretty much it for Vagrant (for now at least). Next I'll need to install <a href="http://www.ansible.com/">Ansible</a> and get it setting up the Ubuntu VM.</p>
 
             <h4>Ansible</h4>
@@ -100,9 +100,9 @@ $ sudo pip install ansible
 <!--</code>-->
 <!--</pre>-->
 
-            <p>Next we need to setup the <a href="http://docs.ansible.com/intro_inventory.html">inventory file</a> which ansible uses to know about the machines it will manage.</p>
+            <p>Next we need to setup the <a href="http://docs.ansible.com/intro_inventory.html">inventory file</a> which tells Ansible about the machines it will manage.</p>
 
-            <p>I'll create a local inventory file for our project:</p>
+            <p>I'll create a local inventory file called hosts for our project:</p>
 
 <pre>
 <code>
@@ -153,10 +153,11 @@ $ ansible all \
 
 
 
-            <p>First, update the Vagrantfile and include the following which tells vagrant we want to use ansible to provision the VM and includes the path to the inventory file.</p>
+            <p>First, update the Vagrantfile and include the following which tells vagrant we want to use ansible to provision the VM and sets the inventory path.</p>
 
 <pre>
 <code class="prettyprint">
+# Enable provisioning with ansible
 config.vm.provision :ansible do |ansible|
     ansible.playbook = "private/ansible/site.yml"
     ansible.inventory_path = "private/ansible/hosts"
@@ -166,7 +167,7 @@ end
 
             <h4>First Playbook</h4>
 
-            <p>Lets update the main playbook file <code>private/ansible/site.yml</code> and add the following:</p>
+            <p>Lets update the main playbook file <code>private/ansible/site.yml</code> and add the following which specifies that for the host 'vagrant' run the task called 'test connection' which just pings the VM:</p>
 
 <pre>
 <code class='prettyprint'>
