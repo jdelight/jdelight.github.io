@@ -292,6 +292,31 @@ $ ansible-playbook private/ansible/site.yml \
 
             <p>Amazingly, this will provision the server with Nginx and we can connect to the default Nginx page.</p>
 
+<pre>
+<code class='prettyprint'>
+PLAY [setup server] ***********************************************************
+
+GATHERING FACTS ***************************************************************
+ok: [54.195.182.28]
+
+TASK: [core | update apt] *****************************************************
+ok: [54.195.182.28]
+
+TASK: [core | install prerequisites] ******************************************
+ok: [54.195.182.28] => (item=build-essential)
+
+TASK: [nginx | install nginx] *************************************************
+ok: [54.195.182.28]
+
+TASK: [nginx | copy nginx configuration] **************************************
+ok: [54.195.182.28]
+
+PLAY RECAP ********************************************************************
+54.195.182.28              : ok=5    changed=0    unreachable=0    failed=0
+</code>
+</pre>
+<p class="caption">Ansible playbook setting up Nginx on an EC2 machine</p>
+
             <h4>Conclusion</h4>
 
             <p>This is only a small portion of what is possible with Vagrant and Ansible but the notion of developing on an environment that mirrors production and being able to test and re-test the deploy processes locally is a great leap forward for web application development.</p>
