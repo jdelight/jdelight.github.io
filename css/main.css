@@ -60,3 +60,7 @@ pre + .caption {
     font-size: 13px;
     color: #888;
 }
+
+.resources {
+    font-size: 12px;
+}
