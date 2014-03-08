@@ -206,11 +206,10 @@ PLAY RECAP ********************************************************************
 
             <h4>Nginx</h4>
 
-            <p>Some useful resources for setting up an Ubuntu server with Nginx</p>
 
             <p>Lets get Nginx installed, I'm going to use roles to distinguish the various aspects of server setup.</p>
 
-            <p>Inside <code>private/ansible/</code> I'll create a roles directory, and add two roles - core and Nginx.</p>
+            <p>Inside <code>private/ansible/</code> I'll create a roles directory, and add two roles - 'core' and 'nginx'.</p>
 
             <p>Core will be responsible to for installing the Nginx prerequisites, and the Nginx role will just install/configure Nginx.</p>
 
@@ -227,7 +226,7 @@ private/
         │   ├── core
         │   │   └── tasks
         │   │       └── main.yml
-        │   └── Nginx
+        │   └── nginx
         │       ├── handlers
         │       │   └── main.yml
         │       ├── tasks
@@ -239,7 +238,7 @@ private/
 </pre>
 
 
-            <p>In <code>private/ansible/core/tasks/main.yml</code> we'll put the basics needed for Nginx to be installed.</p>
+            <p>Here's what our updated site.yml file looks like:</p>
 
 <pre>
 <code class='prettyprint'>
@@ -254,6 +253,7 @@ private/
 </pre>
             <p class="caption">site.yml</p>
 
+            <p>In <code>core/tasks/main.yml</code> we'll put the basics needed for Nginx to be installed.</p>
 
 <pre>
 <code class='prettyprint'>
@@ -281,6 +281,47 @@ private/
 </code>
 </pre>
             <p class="caption">nginx/tasks/main.yml</p>
+
+
+            <p><code>nginx/templates/default.conf</code> is blank for now and <code>nginx/handlers/main.yml</code> contains the task for restarting Nginx</p>
+
+<pre>
+<code class='prettyprint'>
+---
+- name: restart nginx
+  service: name=nginx state=restarted
+</code>
+</pre>
+
+
+            <p>What all that means is we can now run <code>$ vagrant provision</code> and our VM will be setup with Nginx available from http://192.168.33.10/. And we can test the whole process by destroying the VM <code>$ vagrant destroy</code> and setting up again from scratch <code>$ vagrant up</code></p>
+
+            <h3>AWS</h3>
+
+            <p>Next step is to run the exact same playbook on an EC2 instance. Ansible is capable of setting up instances from scratch but for now I'll create the instance manually.</p>
+
+            <p>I'm using an Ubuntu 12.04 image (same as the local VM) - so in theory, because Ansible works over SSH and only requires python on the guest machine I should be able to run the playbook with predictable results.</p>
+
+            <p>To do this I'll use the <code>ansible-playbook</code> command.</p>
+
+<pre>
+<code class='prettyprint'>
+$ ansible-playbook private/ansible/site.yml \
+--private-key ~/.ssh/key.pem \
+-i private/ansible/hosts -u ubuntu
+</code>
+</pre>
+
+
+            <p>We supply playbook, and the ssh key, point to our hosts (which I've amended to reference the public IP address of the EC2 instance) and finally the instance user.</p>
+
+            <p>Amazingly, this will provision the server with Nginx and we can connect to the default Nginx page.</p>
+
+            <h4>Conclusion</h4>
+
+            <p>This is only a small portion of what is possible with Vagrant and Ansible but the notion of developing on an environment that mirrors production and being able to test deploy processes locally is a great leap forward for web application development.</p>
+            <p>Tools like Ansible make this very simple and even enjoyable.</p>
+
 
 
             <hr/>
