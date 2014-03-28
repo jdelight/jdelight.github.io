@@ -21,6 +21,27 @@
 <div class="row">
     <div class="large-8 medium-8 columns">
         <div class="post">
+            <h3>Creating requirements.txt files from settings</h3>
+            <h5 class="subheader">28 March 2014</h5>
+
+            <p>With Django it's a good idea to have a <a href="http://www.rdegges.com/the-perfect-django-settings-file/">settings module for each environment</a>, and having separate requirements.txt files per environment makes things easier to manage too.</p>
+
+            <p>Here's a bit of unixy goodness that will look at the settings files in <code>project/settings</code> and create equivalent requirements.txt files in <code>reqs/</code>.</p>
+
+<pre>
+<code class='prettyprint'>
+mkdir -p reqs &&
+ls  project/settings/ \
+    | grep -E "^[a-z]+.py$" \
+    | cut -d . -f 1 \
+    | xargs -I {} touch reqs/{}.txt
+</code>
+</pre>
+            <p class="caption">Run this from your project root</p>
+
+        </div>
+
+        <div class="post">
             <h3><a href="first-steps-with-vagrant-ansible-and-aws/">First steps with Vagrant, Ansible and AWS</a></h3>
             <h5 class="subheader">8 March 2014</h5>
 
