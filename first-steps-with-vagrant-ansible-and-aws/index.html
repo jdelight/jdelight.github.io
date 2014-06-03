@@ -135,6 +135,7 @@ $ ansible all \
 config.vm.provision :ansible do |ansible|
     ansible.playbook = "private/ansible/site.yml"
     ansible.inventory_path = "private/ansible/hosts"
+    ansible.limit = "all"
 end
 </code>
 </pre>
